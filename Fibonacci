@@ -1,0 +1,16 @@
+package main
+
+import "fmt"
+
+func main(){
+ var a int
+ fmt.Println("Введите число")
+ fmt.Scan(&a)
+ ar :=make([]int, a)
+ ar[0] = 0
+ ar[1] = 1
+ for i:=2; i < len(ar); i++{
+  ar[i] = ar[i-1] + ar[i-2]
+ }
+ fmt.Println(ar[a-1])
+}
