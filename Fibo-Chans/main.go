@@ -25,8 +25,10 @@ func fib(ch chan int) chan int {
 	for i:=2;i<len(arr);i++{
 		arr[i] = arr[i-1] + arr[i-2]
 	}
-	for _,item:= range arr{
-		ch <- item
+	for i,item:= range arr{
+		if (a - 1) <= i && i <= b{
+			ch <- item
+		}
 	}
 	return ch
 }
