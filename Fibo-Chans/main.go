@@ -27,7 +27,6 @@ func fib(ch chan int) chan int {
 	}
 	for i:=a-1;i<b;i++{
 		ch <- arr[i]
-
 	}
 	return ch
 }
