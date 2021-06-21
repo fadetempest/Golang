@@ -25,8 +25,8 @@ func fib(ch chan int) chan int {
 	for i:=2;i<len(arr);i++{
 		arr[i] = arr[i-1] + arr[i-2]
 	}
-	for i:=a-1;i<b;i++{
-		ch <- arr[i]
+	for _,item:= range arr{
+		ch <- item
 	}
 	return ch
 }
