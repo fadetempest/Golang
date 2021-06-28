@@ -24,8 +24,7 @@ func work() chan int{
 
 func convert(ch chan int){
 	defer close(ch)
-	var text string
-	fmt.Scan(&text)
+	text := Scan2()
 	for _, letter:= range text{
 		if string(letter) == " "{
 			ch <- int(32)
@@ -37,5 +36,11 @@ func convert(ch chan int){
 			ch <- int(98)
 		}
 	}
+}
+
+func Scan2() string {
+	in := bufio.NewReader(os.Stdin)
+	str, _ := in.ReadString('\n')
+	return str
 }
 
