@@ -6,6 +6,16 @@ import (
 	"os"
 )
 
+const (
+	firstPoint = 65
+	secondPoint = 91
+	thirdPoint = 90
+	fourPoint = 123
+	ninetySeven = 97
+	deleter = 26
+	lastPoint = 122
+)
+
 func main(){
 	for value:= range working(){
 		fmt.Print(string(value))
@@ -25,10 +35,10 @@ func converting(ch chan int){
 	fmt.Scan(&point)
 	text := Scan()
 	for _, letter:= range text{
-		if (64 > int(rune(letter)) && int(rune(letter)) < 91) && (96 > int(rune(letter)) && int(rune(letter)) < 123){
+		if nonChanging(letter){
 			ch <- int(rune(letter))
-		} else if (64 > int(rune(letter)) + point && int(rune(letter)) + point < 91) || (96 > int(rune(letter)) + point || int(rune(letter)) + point > 123){
-			ch <- int(rune(letter))-26+point
+		} else if changingLetter(letter, point){
+			ch <- int(rune(letter))-deleter+point
 		} else {
 			ch <- int(rune(letter)) + point
 		}
@@ -37,6 +47,17 @@ func converting(ch chan int){
 
 func Scan() string {
 	in := bufio.NewReader(os.Stdin)
-	str, _ := in.ReadString('\n')
+	str, err := in.ReadString('\n')
+	if err != nil{
+		fmt.Printf("Error while reading %s\n", err)
+	}
 	return str
+}
+
+func nonChanging(letter int32) bool{
+	return (int(rune(letter)) < firstPoint) || ((int(rune(letter)) > thirdPoint) && (int(rune(letter)) < ninetySeven)) || (int(rune(letter)) > lastPoint)
+}
+
+func changingLetter(letter int32, point int) bool{
+	return (int(rune(letter)) + point > secondPoint && (int(rune(letter)) + point < ninetySeven)) || (int(rune(letter)) + point > fourPoint)
 }
