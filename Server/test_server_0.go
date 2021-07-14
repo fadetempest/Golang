@@ -3,16 +3,18 @@ package main
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"io/ioutil"
+	"log"
 	"net/http"
 )
 
 type Numbers struct {
-	First int32 `json:"first"`
-	Second int32 `json:"second"`
+	First uint16 `json:"first"`
+	Second uint16 `json:"second"`
 }
 
 var Response struct {
-	Numbers []int32 `json:"numbers"`
+	Numbers []uint16 `json:"numbers"`
 }
 
 func main(){
@@ -23,14 +25,21 @@ func main(){
 
 func showList(w http.ResponseWriter, r *http.Request){
 	var newNumbers Numbers
-	json.NewDecoder(r.Body).Decode(&newNumbers)
+	data, err := ioutil.ReadAll(r.Body)
+	if err != nil{
+		log.Fatal(err)
+	}
+	jsonErr := json.Unmarshal(data, &newNumbers)
+	if jsonErr != nil{
+		log.Fatal(jsonErr)
+	}
 	w.Header().Set("Content-Type", "application/json")
 	fibonacci(&newNumbers)
 	json.NewEncoder(w).Encode(Response.Numbers)
 }
 
 func fibonacci(newNumbers *Numbers){
-	allNumbers:=make([]int32, newNumbers.Second)
+	allNumbers:=make([]uint16, newNumbers.Second)
 	allNumbers[0] = 0
 	allNumbers[1] = 1
 	for i:=2;i<len(allNumbers);i++{
