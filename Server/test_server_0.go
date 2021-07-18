@@ -50,7 +50,10 @@ func fibonacci(newNumbers *Numbers) []uint16 {
 	allNumbers:=make([]uint16, newNumbers.Second)
 	allNumbers[0] = 0
 	allNumbers[1] = 1
-	for i:=2;i<len(allNumbers);i++{
+	for i,_:=range allNumbers{
+		if i < 2{
+			continue
+		}
 		allNumbers[i] = allNumbers[i-1] + allNumbers[i-2]
 	}
 	return(allNumbers[newNumbers.First:])
