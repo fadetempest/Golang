@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
@@ -25,17 +24,20 @@ func main(){
 
 func showList(w http.ResponseWriter, r *http.Request){
 	var newNumbers Numbers
-	data, err := ioutil.ReadAll(r.Body)
-	if err != nil{
-		log.Fatal(err)
-	}
+	data, _:= ioutil.ReadAll(r.Body)
 	jsonErr := json.Unmarshal(data, &newNumbers)
-	if jsonErr != nil{
-		log.Fatal(jsonErr)
+	if jsonErr == nil{
+		w.Header().Set("Content-Type", "application/json")
+		fibonacci(&newNumbers)
+		err := json.NewEncoder(w).Encode(Response.Numbers)
+		if err != nil{
+			w.WriteHeader(400)
+			return
+		}
+	} else{
+		w.WriteHeader(400)
+		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	fibonacci(&newNumbers)
-	json.NewEncoder(w).Encode(Response.Numbers)
 }
 
 func fibonacci(newNumbers *Numbers){
