@@ -16,7 +16,7 @@ type Numbers struct {
 
 func main(){
 	r := mux.NewRouter()
-	r.HandleFunc("/fibo", showList).Methods("GET")
+	r.HandleFunc("/fibo", showList)
 	err:= http.ListenAndServe(":80", r)
 	if err != nil{
 		fmt.Printf("Error listening: %v", err)
@@ -34,7 +34,7 @@ func showList(w http.ResponseWriter, r *http.Request){
 	jsonErr := json.Unmarshal(data, &newNumbers)
 	if jsonErr != nil{
 		w.WriteHeader(400)
-		w.Write([]byte("Your data could be integer"))
+		w.Write([]byte("The numbers must be integers and positive"))
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
