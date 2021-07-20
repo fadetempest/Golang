@@ -17,7 +17,11 @@ type Numbers struct {
 func main(){
 	r := mux.NewRouter()
 	r.HandleFunc("/fibo", showList)
-	err:= http.ListenAndServe(":80", r)
+	srv:=&http.Server{
+		Addr:":80",
+		Handler:r,
+	}
+	err:= srv.ListenAndServe()
 	if err != nil{
 		fmt.Printf("Error listening: %v", err)
 	}
@@ -35,6 +39,11 @@ func showList(w http.ResponseWriter, r *http.Request){
 	if jsonErr != nil{
 		w.WriteHeader(400)
 		w.Write([]byte("The numbers must be integers and positive"))
+		return
+	}
+	if newNumbers.Second == 0{
+		w.WriteHeader(400)
+		w.Write([]byte("Error, second number couldn't be zero"))
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -56,5 +65,5 @@ func fibonacci(newNumbers *Numbers) []uint16 {
 		}
 		allNumbers[i] = allNumbers[i-1] + allNumbers[i-2]
 	}
-	return(allNumbers[newNumbers.First:])
+	return (allNumbers[newNumbers.First:])
 }
