@@ -6,6 +6,10 @@ import (
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
+	"context"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 type Numbers struct {
@@ -17,14 +21,21 @@ type Numbers struct {
 func main(){
 	r := mux.NewRouter()
 	r.HandleFunc("/fibo", showList)
-	srv:=&http.Server{
-		Addr:":80",
-		Handler:r,
+	srv := &http.Server{
+		Addr:    ":80",
+		Handler: r,
 	}
-	err:= srv.ListenAndServe()
-	if err != nil{
+	err := srv.ListenAndServe()
+	if err != nil {
 		fmt.Printf("Error listening: %v", err)
 	}
+	go func(){
+		ch := make(chan os.Signal,1)
+		ctx:= context.Background()
+		signal.Notify(ch,syscall.SIGINT, syscall.SIGTERM)
+		<-ch // заблочимся на этом моменте до комбинации клавиш
+		srv.Shutdown(ctx) // у сервера метод какой-то такой есть посмотри его и соответсвенно контекст создай обычный заранее
+	}()
 }
 
 func showList(w http.ResponseWriter, r *http.Request){
@@ -65,5 +76,5 @@ func fibonacci(newNumbers *Numbers) []uint16 {
 		}
 		allNumbers[i] = allNumbers[i-1] + allNumbers[i-2]
 	}
-	return (allNumbers[newNumbers.First:])
+	return  (allNumbers[newNumbers.First:])
 }
