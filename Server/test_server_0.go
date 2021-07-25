@@ -35,7 +35,7 @@ func main(){
 	ctx:= context.Background()
 	signal.Notify(ch,syscall.SIGINT, syscall.SIGTERM)
 	<-ch // заблочимся на этом моменте до комбинации клавиш
-	srvErr:=srv.Shutdown(ctx) // у сервера метод какой-то такой есть посмотри его и соответсвенно контекст создай обычный заранее
+	srvErr:=srv.Shutdown(ctx)
 	if srvErr != nil{
 		fmt.Printf("Shutdown error %v", srvErr)
 	}
@@ -79,5 +79,5 @@ func fibonacci(newNumbers *Numbers) []uint16 {
 		}
 		allNumbers[i] = allNumbers[i-1] + allNumbers[i-2]
 	}
-	return  (allNumbers[newNumbers.First:])
+	return  allNumbers[newNumbers.First-1:]
 }
