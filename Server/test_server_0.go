@@ -35,7 +35,10 @@ func main(){
 	ctx:= context.Background()
 	signal.Notify(ch,syscall.SIGINT, syscall.SIGTERM)
 	<-ch // заблочимся на этом моменте до комбинации клавиш
-	srv.Shutdown(ctx) // у сервера метод какой-то такой есть посмотри его и соответсвенно контекст создай обычный заранее
+	srvErr:=srv.Shutdown(ctx) // у сервера метод какой-то такой есть посмотри его и соответсвенно контекст создай обычный заранее
+	if srvErr != nil{
+		fmt.Printf("Shutdown error %v", srvErr)
+	}
 }
 
 func showList(w http.ResponseWriter, r *http.Request){
