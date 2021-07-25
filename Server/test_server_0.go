@@ -1,12 +1,12 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
-	"context"
 	"os"
 	"os/signal"
 	"syscall"
@@ -25,17 +25,17 @@ func main(){
 		Addr:    ":80",
 		Handler: r,
 	}
-	err := srv.ListenAndServe()
-	if err != nil {
-		fmt.Printf("Error listening: %v", err)
-	}
 	go func(){
-		ch := make(chan os.Signal,1)
-		ctx:= context.Background()
-		signal.Notify(ch,syscall.SIGINT, syscall.SIGTERM)
-		<-ch // заблочимся на этом моменте до комбинации клавиш
-		srv.Shutdown(ctx) // у сервера метод какой-то такой есть посмотри его и соответсвенно контекст создай обычный заранее
+		err := srv.ListenAndServe()
+		if err != nil {
+			fmt.Printf("Error listening: %v", err)
+		}
 	}()
+	ch := make(chan os.Signal,1)
+	ctx:= context.Background()
+	signal.Notify(ch,syscall.SIGINT, syscall.SIGTERM)
+	<-ch // заблочимся на этом моменте до комбинации клавиш
+	srv.Shutdown(ctx) // у сервера метод какой-то такой есть посмотри его и соответсвенно контекст создай обычный заранее
 }
 
 func showList(w http.ResponseWriter, r *http.Request){
