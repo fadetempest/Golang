@@ -17,19 +17,26 @@ func main(){
 		"http://ya.ru",
 		"http://ёёёё",
 	}
-	getResp(urls)
-}
-
-func getResp(urls []string) {
 	client:= http.Client{
 		Timeout: 5 * time.Second,
 	}
+	result:=make(chan string, len(urls))
+	now:=time.Now()
 	for _, url:=range urls{
-		resp, _:=client.Get(url)
-		if resp != nil{
-			fmt.Println(resp.Status)
-		} else {
-			fmt.Println("404 Bad request")
-		}
+		go workerPool(url,client,result)
+	}
+	for i:=0;i<len(urls);i++{
+		fmt.Println(<-result)
+	}
+	close(result)
+	fmt.Println(time.Since(now))
+}
+
+func workerPool(url string, client http.Client,result chan string){
+	resp, _:=client.Get(url)
+	if resp != nil{
+		result<-resp.Status
+	} else {
+		result<-"404 Not found"
 	}
 }
