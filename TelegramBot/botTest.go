@@ -88,9 +88,7 @@ func checkLink(link string) bool{
 			log.Fatal("Error while inserting value into DB")
 		}
 		check = true
-	} else {
-		fmt.Printf("Element %s already exist\n", link)
-		check=false
-	}
+	} 
+	
 	return check
 }
